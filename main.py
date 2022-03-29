@@ -4,17 +4,20 @@ from ct.radon import radon
 from ct.inverse_radon import iradon
 from ct.common import *
 from ct.ct import CT
+from ct.interactive_ct import InteractiveCT
 from ct.common import preprocess
 
 
 def main():
     image = cv2.imread("images/Paski2.jpg")
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    ct = CT(gray, 2, 1, 180, 180)
+    ct = InteractiveCT(gray, 2, 1, 180, 180)
     sinogram, output = ct.run()
-    cv2.imshow("original", image)
-    cv2.imshow("reconstructed", output)
-    cv2.imshow("sinogram", sinogram)
+    print(len(ct.get_images()[0]))
+    print(len(ct.get_images()[1]))
+    # cv2.imshow("original", image)
+    # cv2.imshow("reconstructed", output)
+    # cv2.imshow("sinogram", sinogram)
     cv2.waitKey()
     # print(.data_element("Rows"))
     # print(preprocess.load_example(2).shape)

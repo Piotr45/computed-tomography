@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Tuple, List
+from typing import Tuple, List, Callable
 from ..common.round import RoundEmitter
 from skimage.draw import line
 
@@ -40,7 +40,9 @@ def calculate_radiation(image: np.ndarray, number_of_detectors: int,
 
 
 def generate_sinogram(image: np.ndarray, theta: int, rotate_angle: int, number_of_detectors: int,
-                      detector_distance: int) -> np.ndarray:
+                      detector_distance: int,
+                      interactive_func: Callable[[np.ndarray], None] = None
+                      ) -> np.ndarray:
     """
     This function constructs sinogram from given image using Radon Transform.
     :param theta: theta angle (in degrees)
@@ -59,6 +61,7 @@ def generate_sinogram(image: np.ndarray, theta: int, rotate_angle: int, number_o
     sinogram = np.zeros(shape=(180 // rotate_angle, number_of_detectors))
 
     for i in range(180 // rotate_angle):
+        interactive_func(sinogram)
         sinogram[i] = calculate_radiation(image, number_of_detectors, round_emitter.emitter,
                                           round_emitter.detectors)
         round_emitter.rotate(rotate_angle_rad)

@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Tuple
+from typing import Tuple, Callable
 from ..common.line_radiation import LineRadiation
 from ..common.round import RoundEmitter
 import skimage.exposure
@@ -7,6 +7,7 @@ import skimage.exposure
 
 def perform_inverse_radon_transform(shape: Tuple[int, int], sinogram: np.ndarray,
                                     rotate_angle: float, theta: float, detector_distance: int,
+                                    interactive_func: Callable[[np.ndarray, np.ndarray], None] = None
                                     ) -> np.ndarray:
     """
     Performs inverse radon transform on given sinogram.
@@ -26,6 +27,7 @@ def perform_inverse_radon_transform(shape: Tuple[int, int], sinogram: np.ndarray
     rotate_angle_rad = np.deg2rad(rotate_angle)
 
     for angle in range(sinogram.shape[0]):
+        interactive_func(inverse_radon.image, inverse_radon.amount)
         inverse_radon.next(sinogram[angle], round_emitter.emitter, round_emitter.detectors)
         round_emitter.rotate(rotate_angle_rad)
 

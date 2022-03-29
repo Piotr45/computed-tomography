@@ -34,12 +34,14 @@ class CT:
         :return: sinogram and reconstructed image
         """
         sinogram = radon.generate_sinogram(self.image, self.theta, self.rotate_angle,
-                                           self.number_of_detectors, self.detector_distance)
+                                           self.number_of_detectors, self.detector_distance,
+                                           self.save_radon_frame)
 
         self.reset_iteration()
 
         image = iradon.perform_inverse_radon_transform(self.image.shape, sinogram, self.rotate_angle,
-                                                       self.theta, self.detector_distance)
+                                                       self.theta, self.detector_distance,
+                                                       self.save_inverse_radon_frame)
         sinogram /= np.max(sinogram)
         return sinogram.T, image
 
