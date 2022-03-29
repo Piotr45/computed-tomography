@@ -1,8 +1,6 @@
-import cv2
 import numpy as np
 from abc import abstractmethod
-from ct.radon import radon
-from ct.inverse_radon import iradon
+from ct.sinogram import radon, iradon
 from typing import Tuple
 
 
@@ -38,11 +36,13 @@ class CT:
                                            self.save_radon_frame)
 
         self.reset_iteration()
+        sinogram = rescale_array(sinogram, (0, 1))
+        sinogram = filter_sinogram(sinogram, create_kernel(21))
 
         image = iradon.perform_inverse_radon_transform(self.image.shape, sinogram, self.rotate_angle,
                                                        self.theta, self.detector_distance,
                                                        self.save_inverse_radon_frame)
-        sinogram /= np.max(sinogram)
+        # sinogram /= np.max(sinogram)
         return sinogram.T, image
 
     @abstractmethod
@@ -50,7 +50,7 @@ class CT:
         pass
 
     @abstractmethod
-    def save_inverse_radon_frame(self, image:np.ndarray, pixel_lines: np.ndarray) -> None:
+    def save_inverse_radon_frame(self, image: np.ndarray, pixel_lines: np.ndarray) -> None:
         pass
 
     @abstractmethod
