@@ -1,18 +1,5 @@
-# import cv2
-# import numpy as np
-# import pydicom
-
-# from pydicom.dataset import Dataset, FileDataset
-# from pydicom.uid import ExplicitVRLittleEndian
-# import pydicom._storage_sopclass_uids
-
-# from skimage.util import img_as_ubyte
-# from skimage.exposure import rescale_intensity
-
-# import matplotlib.pyplot as plt
-
-
 import numpy as np
+import sys
 import pydicom
 
 from pydicom.dataset import Dataset, FileDataset
@@ -22,16 +9,29 @@ from skimage.util import img_as_ubyte
 from skimage.exposure import rescale_intensity
 
 def load_dicom_file(filename: str):
-    ds = pydicom.dcmread(filename)
-    return ds.pixel_array, ds
-
-def save_dicom_file(filename: str, data: dict):
-    pass
+    """
+    loads data from a dicom file 
+    :param filename: name of a source dicom file loacted in the dicom_files catalogue 
+    :return: FileDataset extracted from the dicom file
+    """
+    full_path = sys.path[0] + "\\dicom_files\\" + filename
+    ds = pydicom.dcmread(full_path)
+    return ds
 
 def convert_image_to_ubyte(img: np.ndarray):
+    """
+    :param img: image in the form of a numpy array
+    :return: ubyte data of image
+    """
     return img_as_ubyte(rescale_intensity(img, out_range=(0.0, 1.0)))
 
 def save_as_dicom(file_name, img, patient_data):
+    """
+    :param file_name: name of the created file
+    :param img: image data to save
+    :param patient_data: text data to save in the dicom header
+    """
+    rel_path = "dicom_files\\" + file_name
     img_converted = convert_image_to_ubyte(img)
     
     # Populate required values for file meta information
@@ -78,4 +78,4 @@ def save_as_dicom(file_name, img, patient_data):
 
     ds.PixelData = img_converted.tobytes()
 
-    ds.save_as(file_name, write_like_original=False)
+    ds.save_as(rel_path, write_like_original=False)
