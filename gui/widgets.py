@@ -15,5 +15,10 @@ def interactive_imgs(image, results, sinograms, x=0):
     ax[1].imshow(results[x], cmap='bone')    
     ax[2].imshow(sinograms[x], cmap='bone')
     
-    for x in ax:
-        x.axis('off')
+    for xx in ax:
+        xx.axis('off')
+
+    print(rmse(image, results[x]))
+
+def rmse(img, img_rec):
+    return np.sqrt(np.mean(np.square(img - img_rec)))

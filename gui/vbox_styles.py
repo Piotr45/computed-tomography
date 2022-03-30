@@ -4,7 +4,7 @@ style = {'description_width': 'initial'}
 
 # load image
 steps = IntText(
-    value=1,
+    value=90,
     min=1,
     max=180,
     step=1,
