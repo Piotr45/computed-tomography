@@ -24,23 +24,13 @@ def rescale_array(arr: np.ndarray, feature=(0, 255)) -> np.ndarray:
 
 
 def main():
-    image = cv2.imread("images/Kolo.jpg")
+    image = cv2.imread("images/Shepp_logan.jpg")
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-    # sinogram = radon.create_sinogram(gray, max(gray.shape) // 2, 90, 180, 120)
-    # sinogram = rescale_array(sinogram, (0, 1))
-    # sinogram = filter_sinogram(sinogram, create_kernel(21))
-    # out = iradon.inverse_radon(sinogram, gray, max(gray.shape) // 2, 90, 180, 120)
-    # cv2.imshow("original", gray)
-    # cv2.imshow("sinogram", sinogram.astype(np.uint8))
-    # cv2.imshow("reconstructed", out)
-    # cv2.waitKey()
-    ct = CT(gray, 90, 180, 120, True)
+    ct = CT(gray, 180, 180, 180)
     sinogram, reconstruction = ct.run()
-    print(len(ct.get_frames()[0]), len(ct.get_frames()[1]))
-    cv2.imshow("original", gray)
-    cv2.imshow("sinogram", sinogram.astype(np.uint8))
-    cv2.imshow("reconstructed", reconstruction)
+    # cv2.imwrite("original", gray)
+    cv2.imwrite("exp/sinogram-180-180-180.png", sinogram)
+    cv2.imwrite("exp/reconstructed-180-180-180.png", reconstruction)
     cv2.waitKey()
 
 

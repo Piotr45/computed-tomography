@@ -10,17 +10,15 @@ class CT:
     Simulates computer tomography via image reconstruction.
     """
     def __init__(self, image: np.ndarray, scans: int, detectors: int, spread: int,
-                 animate: bool = False):
-        if scans <= 0 or scans >= 180:
-            raise ArithmeticError("Scans have to be in range (0, 180)!")
-        else:
-            self.image = image
-            self.scans = scans
-            self.detectors = detectors
-            self.spread = spread
-            self.animate = animate
-            self.sinograms = []
-            self.reconstructions = []
+                 animate: bool = False, fltr: bool = False):
+        self.filter = fltr
+        self.image = image
+        self.scans = scans
+        self.detectors = detectors
+        self.spread = spread
+        self.animate = animate
+        self.sinograms = []
+        self.reconstructions = []
 
     def run(self) -> Tuple[np.ndarray, np.ndarray]:
         """
@@ -33,7 +31,9 @@ class CT:
                                                     self.spread, self.animate)
 
         sinogram = rescale_array(sinogram, (0, 1))
-        sinogram = filter_sinogram(sinogram, create_kernel(21))
+        if self.filter:
+            sinogram = filter_sinogram(sinogram, create_kernel(21))
+
         self.sinograms = sinograms
 
         reconstruction, reconstructions = iradon.inverse_radon(sinogram, radius, self.scans,
