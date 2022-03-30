@@ -34,6 +34,12 @@ interactive = Checkbox(
     disabled=False,
     indent=False
 )
+interactive = Checkbox(
+    value=True,
+    description='Zastosuj splot',
+    disabled=False,
+    indent=False
+)
 filename = Text(
     description='Nazwa pliku z katalogu dicom',
     style=style,
