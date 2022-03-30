@@ -34,7 +34,7 @@ interactive = Checkbox(
     disabled=False,
     indent=False
 )
-interactive = Checkbox(
+convolute = Checkbox(
     value=True,
     description='Zastosuj splot',
     disabled=False,
