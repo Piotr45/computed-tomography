@@ -1,58 +1,47 @@
 import numpy as np
 from abc import abstractmethod
 from ct.sinogram import radon, iradon
-from typing import Tuple
+from ct.utils.utils import *
+from typing import Tuple, List
 
 
 class CT:
     """
     Simulates computer tomography via image reconstruction.
     """
-    def __init__(self, image: np.ndarray, rotate_angle: int, start_angle: int,
-                 number_of_detectors: int, detector_distance: int):
-        """
-        :param image: image that we want to be reconstructed
-        :param rotate_angle: the angle by which we want to rotate every iteration (in degrees)
-        :param start_angle: angle on the circle from which we will start the measurement
-        :param number_of_detectors: number of detectors in cluster
-        :param detector_distance: distance between far-left and far-right detector (in pixels)
-        """
-        if rotate_angle <= 0 or rotate_angle >= 180:
-            raise ArithmeticError("Rotate angle have to be in range (0, 180)!")
+    def __init__(self, image: np.ndarray, scans: int, detectors: int, spread: int,
+                 animate: bool = False):
+        if scans <= 0 or scans >= 180:
+            raise ArithmeticError("Scans have to be in range (0, 180)!")
         else:
             self.image = image
-            self.rotate_angle = rotate_angle
-            self.theta = start_angle
-            self.number_of_detectors = number_of_detectors
-            self.detector_distance = detector_distance
+            self.scans = scans
+            self.detectors = detectors
+            self.spread = spread
+            self.animate = animate
+            self.sinograms = []
+            self.reconstructions = []
 
     def run(self) -> Tuple[np.ndarray, np.ndarray]:
         """
         Performs computed tomography.
         :return: sinogram and reconstructed image
         """
-        sinogram = radon.generate_sinogram(self.image, self.theta, self.rotate_angle,
-                                           self.number_of_detectors, self.detector_distance,
-                                           self.save_radon_frame)
+        radius = max(self.image.shape) // 2
 
-        self.reset_iteration()
+        sinogram, sinograms = radon.create_sinogram(self.image, radius, self.scans, self.detectors,
+                                                    self.spread, self.animate)
+
         sinogram = rescale_array(sinogram, (0, 1))
         sinogram = filter_sinogram(sinogram, create_kernel(21))
+        self.sinograms = sinograms
 
-        image = iradon.perform_inverse_radon_transform(self.image.shape, sinogram, self.rotate_angle,
-                                                       self.theta, self.detector_distance,
-                                                       self.save_inverse_radon_frame)
-        # sinogram /= np.max(sinogram)
-        return sinogram.T, image
+        reconstruction, reconstructions = iradon.inverse_radon(sinogram, radius, self.scans,
+                                                               self.detectors, self.spread,
+                                                               self.animate)
 
-    @abstractmethod
-    def save_radon_frame(self, sinogram: np.ndarray) -> None:
-        pass
+        self.reconstructions = reconstructions
+        return sinogram, reconstruction
 
-    @abstractmethod
-    def save_inverse_radon_frame(self, image: np.ndarray, pixel_lines: np.ndarray) -> None:
-        pass
-
-    @abstractmethod
-    def reset_iteration(self) -> None:
-        pass
+    def get_frames(self) -> Tuple[List[np.ndarray], List[np.ndarray]]:
+        return self.sinograms, self.reconstructions
