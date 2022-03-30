@@ -8,7 +8,7 @@ steps = IntText(
     min=1,
     max=180,
     step=1,
-    description='Krok: ',
+    description='Liczba skanów: ',
     disabled=False,
     style=style
 )
