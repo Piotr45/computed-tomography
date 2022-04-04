@@ -4,16 +4,15 @@ style = {'description_width': 'initial'}
 
 # load image
 steps = IntText(
-    value=90,
+    value=180,
     min=1,
-    max=180,
     step=1,
     description='Liczba skanów: ',
     disabled=False,
     style=style
 )
 number_of_detectors = IntText(
-    value=90,
+    value=180,
     min=1,
     step=1,
     description='Liczba detektorów: ',
@@ -21,10 +20,10 @@ number_of_detectors = IntText(
     style=style
 )
 detector_distance = IntText(
-    value=90,
+    value=270,
     min=1,
     step=1,
-    description='Rozpiętość między detektorami (px): ',
+    description='Rozpiętość układu detektorów: ',
     disabled=False,
     style=style
 )

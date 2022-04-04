@@ -30,9 +30,8 @@ class CT:
         sinogram, sinograms = radon.create_sinogram(self.image, radius, self.scans, self.detectors,
                                                     self.spread, self.animate)
 
-        sinogram = rescale_array(sinogram, (0, 1))
         if self.filter:
-            sinogram = filter_sinogram(sinogram, create_kernel(21))
+            sinogram = filter_sinogram(rescale_array(sinogram, (0, 1)), create_kernel(21))
 
         self.sinograms = sinograms
 

@@ -27,4 +27,4 @@ def inverse_radon(sinogram: np.ndarray, radius: int, scans: int, detectors: int,
         if animate:
             results.append(rescale_array(reconstructed_image, (0, 1)))
 
-    return rescale_array(reconstructed_image, (0, 1)), results
+    return rescale_array(reconstructed_image).astype(np.uint8), results

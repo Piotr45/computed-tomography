@@ -8,6 +8,7 @@ import pydicom._storage_sopclass_uids
 from skimage.util import img_as_ubyte
 from skimage.exposure import rescale_intensity
 
+
 def load_dicom_file(filename: str):
     """
     loads data from a dicom file 
@@ -18,12 +19,14 @@ def load_dicom_file(filename: str):
     ds = pydicom.dcmread(full_path)
     return ds
 
+
 def convert_image_to_ubyte(img: np.ndarray):
     """
     :param img: image in the form of a numpy array
     :return: ubyte data of image
     """
     return img_as_ubyte(rescale_intensity(img, out_range=(0.0, 1.0)))
+
 
 def save_as_dicom(file_name, img, patient_data):
     """
