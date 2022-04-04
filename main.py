@@ -24,13 +24,12 @@ def rescale_array(arr: np.ndarray, feature=(0, 255)) -> np.ndarray:
 
 
 def main():
-    image = cv2.imread("images/Shepp_logan.jpg")
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    ct = CT(gray, 180, 180, 180)
+    image = cv2.imread("images/Kropka.jpg", 0)
+    ct = CT(image, 180, 180, 270, False, False)
     sinogram, reconstruction = ct.run()
-    # cv2.imwrite("original", gray)
-    cv2.imwrite("exp/sinogram-180-180-180.png", sinogram)
-    cv2.imwrite("exp/reconstructed-180-180-180.png", reconstruction)
+    cv2.imshow("original", image)
+    cv2.imshow("sinogram bad", sinogram.astype(np.uint8))
+    cv2.imshow("reconstruction", reconstruction)
     cv2.waitKey()
 
 

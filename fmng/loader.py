@@ -1,5 +1,7 @@
 import cv2
 import numpy as np
+import os
+import sys
 
 
 def load_image(filename: str) -> np.ndarray:
@@ -8,14 +10,20 @@ def load_image(filename: str) -> np.ndarray:
     :param filename: Path to file
     :return: image in grayscale
     """
-    image = cv2.imread(filename)
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    return gray
+    if filename in os.listdir('images'):
+        image = cv2.imread(f"{os.getcwd()}\\images\\{filename}", 0)
+    else:
+        image = cv2.imread(filename, 0)
+
+    if image is None:
+        raise FileNotFoundError("File with that name does not exist in 'images' directory or "
+                                "you have passed wrong path to file.")
+    return image
 
 
 def save_image(image: np.ndarray, output_file: str) -> None:
     """
-    Saves image on disk
+    Saves image on disk.
     :param image: image that we want save
     :param output_file: output file name / path
     :return: None
